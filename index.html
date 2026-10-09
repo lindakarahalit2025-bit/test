@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار تجريبي - التربية الإسلامية - المستوى السادس</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --c1:#0e7c66; --c2:#7b3fe4; --c3:#e8590c; --c4:#1c7ed6;
+  --ok:#2b9348; --bad:#d62828; --bg:#f4f7fb; --card:#fff; --ink:#1f2937; --muted:#6b7280;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Tajawal',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.8}
+header{background:linear-gradient(135deg,#0e7c66,#1c7ed6 60%,#7b3fe4);color:#fff;padding:28px 16px 70px;text-align:center}
+header h1{margin:0;font-size:1.7rem;font-weight:800}
+header p{margin:6px 0 0;opacity:.95}
+.wrap{max-width:900px;margin:-50px auto 40px;padding:0 16px}
+.panel{background:var(--card);border-radius:18px;box-shadow:0 8px 30px rgba(0,0,0,.08);padding:18px}
+.student{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.student label{font-weight:700}
+.student input{flex:1;min-width:200px;padding:10px 14px;border:2px solid #e5e7eb;border-radius:12px;font-family:inherit;font-size:1rem}
+.tabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:16px 0}
+.tab{border:none;border-radius:14px;padding:12px 10px;color:#fff;font-family:inherit;font-weight:700;font-size:.98rem;cursor:pointer;opacity:.6;transition:.2s;position:relative}
+.tab.active{opacity:1;transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,.18)}
+.tab .badge{display:block;font-size:.8rem;font-weight:500;opacity:.95}
+.lesson-head{border-radius:16px;color:#fff;padding:16px 18px;margin-bottom:14px}
+.lesson-head h2{margin:0;font-size:1.3rem}
+.lesson-head small{opacity:.95}
+.progress{height:10px;background:rgba(255,255,255,.35);border-radius:10px;margin-top:10px;overflow:hidden}
+.progress span{display:block;height:100%;background:#fff;width:0;transition:.3s}
+.q{background:var(--card);border-radius:16px;padding:16px 18px;margin-bottom:14px;box-shadow:0 4px 14px rgba(0,0,0,.05);border-right:6px solid var(--accent)}
+.q h3{margin:0 0 10px;font-size:1.08rem;font-weight:700}
+.q h3 .num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;font-size:.9rem;margin-left:8px}
+.tagq{display:inline-block;font-size:.75rem;padding:2px 10px;border-radius:20px;background:#fff3bf;color:#7a5c00;margin-right:6px;vertical-align:middle}
+.opts{display:grid;gap:8px}
+.opt{text-align:right;border:2px solid #e5e7eb;background:#fafafa;border-radius:12px;padding:10px 14px;font-family:inherit;font-size:1rem;cursor:pointer;transition:.15s;color:var(--ink)}
+.opt:hover:not(:disabled){border-color:var(--accent);background:#fff}
+.opt:disabled{cursor:default}
+.opt.correct{border-color:var(--ok);background:#e9f8ee;font-weight:700}
+.opt.wrong{border-color:var(--bad);background:#fdecec}
+.fb{display:none;margin-top:10px;padding:10px 14px;border-radius:12px;font-size:.95rem}
+.fb.show{display:block}
+.fb.ok{background:#e9f8ee;color:#1b5e20}
+.fb.no{background:#fdecec;color:#8a1c1c}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:20px 0}
+.btn{border:none;border-radius:14px;padding:12px 22px;font-family:inherit;font-weight:700;font-size:1rem;cursor:pointer;color:#fff}
+.btn.main{background:linear-gradient(135deg,#0e7c66,#1c7ed6)}
+.btn.alt{background:#6b7280}
+.btn.next{background:linear-gradient(135deg,#e8590c,#7b3fe4)}
+#result{display:none}
+.res-card{text-align:center}
+.res-card .big{font-size:3rem;font-weight:800;margin:6px 0;color:var(--c1)}
+.stars{font-size:2rem;letter-spacing:4px}
+.res-table{width:100%;border-collapse:collapse;margin-top:14px}
+.res-table td,.res-table th{padding:10px;border-bottom:1px solid #eee;text-align:center}
+.res-table th{background:#f1f5f9}
+footer{text-align:center;color:var(--muted);font-size:.9rem;padding-bottom:30px}
+@media(max-width:520px){header h1{font-size:1.3rem}.q{padding:14px}}
+@media print{.tabs,.actions,header p{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🌙 الاختبار التجريبي الإلكتروني – التربية الإسلامية</h1>
+  <p>المستوى السادس • أربعة دروس • 40 سؤالًا (اختيار من متعدد)</p>
+</header>
+
+<div class="wrap">
+  <div class="panel">
+    <div class="student">
+      <label for="sname">👤 اسم الطالب:</label>
+      <input id="sname" placeholder="اكتب اسمك هنا">
+    </div>
+    <div class="tabs" id="tabs"></div>
+  </div>
+
+  <div id="quiz" style="margin-top:16px"></div>
+
+  <div class="actions" id="actions">
+    <button class="btn next" id="nextBtn">الدرس التالي ⬅</button>
+    <button class="btn main" id="finishBtn">📊 عرض النتيجة النهائية</button>
+  </div>
+
+  <div id="result" class="panel res-card"></div>
+</div>
+
+<footer>إعداد المعلمة: ليندا • التربية الإسلامية</footer>
+
+<script>
+const LESSONS = [
+{
+  title:"دلائل قدرة الله تعالى", sub:"سورة لقمان (8 – 11) – تفسير", color:"#0e7c66",
+  qs:[
+   {q:"سُمِّيت سورةُ لقمانَ بهذا الاسم:", t:1, a:"لورودِ قصةِ لقمانَ الحكيمِ ووصاياه لابنِه فيها", o:["لأنها نزلت على لقمانَ الحكيم","لأن لقمانَ هو من جمعَ آياتِها","لكثرةِ ذكرِ الجبالِ والأرضِ فيها"], e:"سُمِّيت بذلك لأنها ذكرت لقمانَ الحكيمَ ووصاياه العظيمةَ لابنِه."},
+   {q:"معنى كلمة (رَواسِيَ) في قوله تعالى: ﴿وألقى في الأرض رواسي﴾:", t:1, a:"جبالًا ثابتة", o:["السفنُ التي تجري في البحر","سُحُبًا ممطرة","أنهارًا جارية"], e:"الرواسي هي الجبالُ الثابتة، وليست السفنَ."},
+   {q:"معنى (أَنْ تَمِيدَ بِكُمْ):", t:1, a:"لئلا تضطربَ بكم", o:["لئلا تجفَّ بكم","لئلا تُظلِمَ عليكم","لئلا تضيقَ بكم"], e:"تميد: تضطرب وتتحرك، فثبَّتها اللهُ بالجبال."},
+   {q:"معنى كلمة (بَثَّ) في قوله تعالى: ﴿وبثَّ فيها من كل دابة﴾:", t:1, a:"نَشَرَ", o:["جَمَعَ","أهلَكَ","أخفى"], e:"بثَّ: نَشَرَ وفرَّق في الأرض."},
+   {q:"معنى كلمة (دابَّة):", t:1, a:"اسمٌ لكلِّ ما دبَّ على الأرض", o:["الحيواناتُ المفترسةُ فقط","الطيورُ التي تطير في السماء","الأسماكُ في البحار"], e:"الدابة: كلُّ ما يدبُّ ويمشي على الأرض."},
+   {q:"معنى (الحكيم) في قوله تعالى: ﴿وهو العزيز الحكيم﴾:", t:1, a:"الذي يضعُ الشيءَ في مكانِه المناسب", o:["الذي يعفو عن المذنبين","الذي يعلمُ الغيبَ فقط","الذي يرزقُ الخلقَ"], e:"العبارة صحيحة: الحكيمُ هو الذي يضعُ كلَّ شيءٍ في موضعِه."},
+   {q:"شرحُ قوله تعالى: ﴿خلق السماوات بغير عمدٍ ترونها﴾:", t:1, a:"من دلائلِ قدرةِ اللهِ أنه رفعَ السماواتِ بلا أعمدةٍ تستندُ إليها", o:["أن السماواتِ لها أعمدةٌ عظيمةٌ لا نراها","أن السماءَ قريبةٌ من الأرض","أن السماواتِ خُلِقَت بعد الأرضِ مباشرة"], e:"بغير عمد ترونها: بغير دعائمَ تبصرونها، وهذا من عظيمِ قدرةِ الله."},
+   {q:"معنى (زَوْجٍ كَريمٍ) في قوله تعالى: ﴿فأنبتنا فيها من كل زوج كريم﴾:", t:0, a:"صِنفٍ كثيرِ المنفعة", o:["زوجِ الإنسانِ الصالح","نوعٍ واحدٍ من الثمار","مطرٍ غزير"], e:"الزوج هنا: الصنف، والكريم: كثيرُ النفعِ والخير."},
+   {q:"جزاءُ الذين آمنوا وعملوا الصالحات كما في الآيات:", t:0, a:"جناتُ النعيمِ خالدين فيها", o:["الغِنى في الدنيا فقط","الشهرةُ بين الناس","النجاةُ من الأمراض"], e:"وعدهم اللهُ جناتِ النعيم خالدين فيها، ووعدُ الله حقٌّ لا يُخلَف."},
+   {q:"قوله تعالى: ﴿هذا خلق الله فأروني ماذا خلق الذين من دونه﴾ يدلُّ على:", t:0, a:"تحدّي المشركين أن يُظهِروا شيئًا خلقَتْه آلهتُهم", o:["أن الأصنامَ خلقت بعضَ المخلوقات","مدحِ المشركين على عبادتهم","أن الخلقَ مشتركٌ بين اللهِ وغيرِه"], e:"اللهُ وحدَه الخالق، والأصنامُ لم تخلق شيئًا، والمشركون في ضلالٍ مبين."}
+  ]
+},
+{
+  title:"الأمر بالقوة وترك العجز", sub:"حديث شريف – شرح وحفظ", color:"#7b3fe4",
+  qs:[
+   {q:"راوي حديث «المؤمنُ القويُّ خيرٌ وأحبُّ إلى الله من المؤمن الضعيف» هو الصحابي:", t:1, a:"أبو هريرة رضي الله عنه", o:["عبدُ الله بنُ عمر رضي الله عنهما","أنسُ بنُ مالك رضي الله عنه","عبدُ الله بنُ عباس رضي الله عنهما"], e:"الحديث رواه أبو هريرة رضي الله عنه، وأخرجه مسلم."},
+   {q:"اسمُ الصحابي أبي هريرة رضي الله عنه:", t:1, a:"عبدُ الرحمن بنُ صخرٍ الدَّوْسي", o:["عبدُ الله بنُ قيس","معاذُ بنُ جبل","سعدُ بنُ معاذ"], e:"أبو هريرة: عبد الرحمن بن صخر الدوسي، أسلم في اليمن وهاجر عام 7هـ."},
+   {q:"من فضائل أبي هريرة رضي الله عنه:", t:1, a:"لازمَ النبيَّ ﷺ فدعا له بالعلم وحفظَ كثيرًا من الحديث", o:["كان أولَ من أسلم من الصبيان","كان أولَ خليفةٍ للمسلمين","حملَ رايةَ المهاجرين يوم بدر"], e:"لازم النبيَّ ﷺ منذ إسلامه، فدعا له بالعلم، فحفظ كثيرًا من الحديث."},
+   {q:"المقصود بـ (المؤمن القوي) في الحديث:", t:1, a:"القويُّ في علمِه وبدنِه وهمَّتِه", o:["القويُّ في جسمِه فقط","الغنيُّ بمالِه","صاحبُ المنصبِ والسلطة"], e:"القوة تشمل الدينَ والعلمَ والبدنَ والهمة، وليست قوة الجسم وحدها."},
+   {q:"معنى «ولا تَعْجِزْ»:", t:1, a:"لا تكسلْ ولا تضعفْ", o:["لا تتكلمْ كثيرًا","لا تغضبْ","لا تسافرْ"], e:"لا تعجز: واصلْ واستمرَّ ولا تكسلْ أو تضعفْ مهما واجهتَ من معوقات."},
+   {q:"معنى «واستعِنْ بالله»:", t:1, a:"اطلبِ العونَ والمساعدةَ من الله", o:["اعتمدْ على نفسِك فقط","اتركِ العملَ وانتظرِ النتيجة","اطلبِ المساعدةَ من الناس دون الله"], e:"في طريق السعي للنفع تحتاج عونَ الله، فتوكَّلْ عليه واسألْه أن يعينَك."},
+   {q:"ما تأثيرُ كلمة (لو) على نفسِ الإنسان؟", t:1, a:"تفتحُ الوساوسَ والهمومَ والندمَ وتُضعِفُ الرضا بقضاءِ الله", o:["تزيدُ ثقتَه بنفسِه","تجعلُه أكثرَ نشاطًا","تُقوِّي إيمانَه بالقدر"], e:"«فإن لو تفتحُ عملَ الشيطان»: أي وساوسه وأوهامه، فتزرع الاعتراض على القدر."},
+   {q:"إذا أصاب المسلمَ شيءٌ بعد أن بذلَ جهدَه، فإنه يقول:", t:1, a:"قدَرُ اللهِ وما شاءَ فعل", o:["لو أني فعلتُ كذا لكان كذا","هذا ظلمٌ لي","لن أحاولَ مرةً أخرى"], e:"المسلم يرضى بما قدَّره الله ويأخذ الدروسَ والعِبَر."},
+   {q:"أكمل الحديث: «المؤمنُ القويُّ خيرٌ وأحبُّ إلى الله من المؤمن الضعيف، وفي كلٍّ ...»", t:1, a:"خيرٌ", o:["أجرٌ","فضلٌ","نفعٌ"], e:"«وفي كلٍّ خيرٌ» لأنهما مؤمنان، والأفضلية للقوي لأنه أكثر نفعًا."},
+   {q:"من الفوائد المستفادة من الحديث الشريف:", t:1, a:"الحرصُ على ما ينفعُ، والأخذُ بالأسباب مع الاستعانةِ بالله، والرضا بالقدر", o:["تركُ العملِ والاكتفاءُ بالدعاء","الندمُ الدائمُ على ما فات","الاهتمامُ ببناءِ الجسم فقط"], e:"من فوائده: الجدّ والاجتهاد، والاستعانة بالله، وعدم العجز، والرضا بقضاء الله."}
+  ]
+},
+{
+  title:"الإيمان باليوم الآخر", sub:"العقيدة الإسلامية", color:"#e8590c",
+  qs:[
+   {q:"الركنُ الخامس من أركان الإيمان هو:", t:0, a:"الإيمانُ باليوم الآخر", o:["الإيمانُ بالكتب","الإيمانُ بالقدر خيرِه وشرِّه","الإيمانُ بالملائكة"], e:"أركان الإيمان: بالله، وملائكته، وكتبه، ورسله، واليوم الآخر، والقدر."},
+   {q:"تعريف اليوم الآخر:", t:1, a:"يومُ القيامةِ الذي تنتهي فيه الحياةُ على الأرض ويبعثُ اللهُ الخلائقَ للحسابِ والجزاء", o:["آخرُ يومٍ في السنة الهجرية","اليومُ الذي يموتُ فيه الإنسان","يومُ عيدِ الأضحى"], e:"اليوم الآخر: يوم القيامة، يتغيَّر فيه الكون ويُبعث الخلق للحساب والجزاء."},
+   {q:"المقصود بالإيمان باليوم الآخر:", t:1, a:"التصديقُ بكلِّ ما أخبرَ به اللهُ ونبيُّه ﷺ ممّا يكونُ بعدَ الموت", o:["معرفةُ موعدِ يومِ القيامة","التصديقُ بالحياة الدنيا فقط","حفظُ سورةِ التكوير"], e:"هو التصديق الجازم بكل ما يكون بعد الموت مما أخبر به الله ورسوله ﷺ."},
+   {q:"حكم الإيمان باليوم الآخر:", t:0, a:"فرضٌ، وهو أحدُ أركانِ الإيمانِ الستة", o:["سُنَّة","مستحبّ","مباح"], e:"الإيمان باليوم الآخر فرض، ودليله قوله تعالى: ﴿وبالآخرة هم يوقنون﴾ وحديث جبريل."},
+   {q:"أيُّ العبارات الآتية صحيحة؟", t:1, a:"الحكمةُ من إقامةِ الحسابِ يومَ القيامة تحقيقُ العدالةِ الإلهية", o:["لا توجدُ أدلةٌ على وجودِ يومِ القيامة","يومُ القيامة لا حسابَ فيه","المؤمنُ والكافرُ يُجزَيانِ الجزاءَ نفسَه"], e:"من حِكَم الحساب: تحقيق العدالة الإلهية، وتحفيز المسلم على فعل الخير والبعد عن الشر."},
+   {q:"وصفَ اللهُ تعالى مشاهدَ يومِ القيامةِ في القرآن الكريم:", t:1, a:"حتى نتخيَّلَها ونتهيَّأَ لها", o:["لنعرفَ موعدَها بالتحديد","لأنها حدثت من قبل","للتسلية والقصص فقط"], e:"العبارة صحيحة: وصفها لنا لنتخيَّلَها ونستعدَّ لها بالعمل الصالح."},
+   {q:"الآيةُ التي تصفُ (زوالَ الجبالِ عن وجهِ الأرض):", t:1, a:"﴿وإذا الجبالُ سُيِّرَت﴾", o:["﴿وإذا البحارُ سُجِّرَت﴾","﴿وإذا الوحوشُ حُشِرَت﴾","﴿إذا الشمسُ كُوِّرَت﴾"], e:"سَيرُ الجبال: زوالها عن وجه الأرض."},
+   {q:"الآيةُ التي تصفُ (إهمالَ النوقِ الحواملِ وتركَها):", t:1, a:"﴿وإذا العِشارُ عُطِّلَت﴾", o:["﴿وإذا النجومُ انكدَرَت﴾","﴿وإذا الجبالُ سُيِّرَت﴾","﴿وإذا الوحوشُ حُشِرَت﴾"], e:"العِشار: النوق الحوامل، تصبح بلا قيمة فتُترك."},
+   {q:"الآيةُ التي تصفُ (تناثرَ النجومِ وتساقطَها):", t:1, a:"﴿وإذا النجومُ انكدَرَت﴾", o:["﴿إذا الشمسُ كُوِّرَت﴾","﴿وإذا العِشارُ عُطِّلَت﴾","﴿وإذا البحارُ سُجِّرَت﴾"], e:"انكدار النجوم: تناثرها وتساقطها."},
+   {q:"الآيةُ التي تصفُ (اشتعالَ البحارِ وتحوُّلَها إلى نارٍ هائلة):", t:1, a:"﴿وإذا البحارُ سُجِّرَت﴾", o:["﴿وإذا الجبالُ سُيِّرَت﴾","﴿إذا الشمسُ كُوِّرَت﴾","﴿وإذا النجومُ انكدَرَت﴾"], e:"تسجير البحار: توقد فتصبح نارًا."}
+  ]
+},
+{
+  title:"أحكام النجاسات", sub:"الفقه الإسلامي", color:"#1c7ed6",
+  qs:[
+   {q:"تعريف النجاسة:", t:1, a:"القذارةُ التي أمرنا الإسلامُ باجتنابِها وتجبُ الطهارةُ منها", o:["كلُّ ما له رائحةٌ كريهة","الغبارُ الذي يصيبُ الثياب","كلُّ ما يُتعِبُ الإنسان"], e:"النجاسة: القذارة التي أمرنا الإسلام باجتنابها ويجب التطهر منها."},
+   {q:"حكمُ تطهيرِ النجاسات، ودليلُه:", t:0, a:"واجب، لقوله تعالى: ﴿وثيابَك فطهِّر﴾", o:["مستحب، لقوله تعالى: ﴿وثيابَك فطهِّر﴾","مباح، لأن الأمرَ يسير","سُنَّة، في الصلاة فقط"], e:"تطهير النجاسات واجب، والدليل: ﴿وثيابك فطهر﴾ [المدثر: 4]."},
+   {q:"المصطلح المناسب: (هي التي تقعُ على الشيءِ فتُنجِّسُه، ويمكنُ تطهيرُها وإزالتُها):", t:1, a:"النجاسةُ الحُكميَّة", o:["النجاسةُ العينيَّة","الطهارةُ الصغرى","النجاسةُ المعفوُّ عنها"], e:"الحكمية: طرأت على شيء طاهر فنجَّسته، ويمكن إزالتها."},
+   {q:"المصطلح المناسب: (هي التي بذاتِها نَجِسة):", t:1, a:"النجاسةُ العينيَّة", o:["النجاسةُ الحُكميَّة","النجاسةُ اليسيرة","الطهارةُ الكبرى"], e:"العينية: نجسة في ذاتها ولا يمكن تطهيرها."},
+   {q:"الثوبُ الذي أصابه بَولٌ كثير، حُكمُه:", t:1, a:"يُغسَلُ بالماءِ حتى تذهبَ عينُ النجاسة", o:["يُعفى عنه","يُغسَلُ سبعَ مراتٍ إحداهُنَّ بالتراب","يُرَشُّ مكانُ البول بالماء"], e:"البول الكثير على الثوب يُغسل بالماء حتى تزول عين النجاسة."},
+   {q:"مثالٌ على النجاسةِ العينيَّة:", t:1, a:"الخِنزير", o:["ثوبٌ أصابه دم","سجادةٌ أصابها بول","إناءٌ شربَ منه كلب"], e:"الخنزير نجس بذاته (عينية)، أما الثوب والسجادة والإناء فأشياء طاهرة طرأت عليها النجاسة (حكمية)."},
+   {q:"مثالٌ على النجاسةِ الحُكميَّة:", t:1, a:"ثوبٌ طاهرٌ أصابه دم", o:["الخِنزير","الكلب","الميتة"], e:"الثوب كان طاهرًا ثم أصابته النجاسة فيمكن تطهيره بالغسل."},
+   {q:"إذا أكلَ كلبٌ أو شربَ من إناءٍ في المنزل، فإنه يُطهَّر بـ:", t:0, a:"غسلِه سبعَ مراتٍ إحداهُنَّ بالتراب", o:["غسلِه مرةً واحدةً بالماء","رشِّه بالماء فقط","تركِه في الشمس حتى يجف"], e:"لُعاب الكلب يُطهَّر بغسل الإناء سبع مرات إحداهن بالتراب."},
+   {q:"وجودُ بولٍ على التراب يُطهَّر بـ:", t:0, a:"صبِّ الماءِ عليه", o:["غسلِه سبعَ مرات","تركِه دون تطهير","تغطيتِه بالرمل فقط"], e:"البول على التراب يُطهَّر بإراقة (صبّ) الماء عليه."},
+   {q:"الدمُ اليسيرُ (القليل) الذي يصيبُ الثوب:", t:0, a:"يُعفى عنه، واليسيرُ ما تعارفَ الناسُ أنه قليل", o:["يجبُ غسلُه سبعَ مرات","لا تصحُّ الصلاةُ أبدًا مع وجودِه","يجبُ تمزيقُ الثوب"], e:"يُعفى عن الدم اليسير، عدا دم الحيوانات النجسة والدم الخارج من السبيلين فيجب تطهيره."}
+  ]
+}
+];
+
+const shuffle = a => { for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const state = LESSONS.map(L => L.qs.map(q => ({opts: shuffle([q.a,...q.o]), chosen:null})));
+let current = 0;
+
+function score(li){ return state[li].filter((s,i)=>s.chosen===LESSONS[li].qs[i].a).length; }
+function answered(li){ return state[li].filter(s=>s.chosen!==null).length; }
+
+function renderTabs(){
+  const t = document.getElementById('tabs'); t.innerHTML='';
+  LESSONS.forEach((L,i)=>{
+    const b=document.createElement('button');
+    b.className='tab'+(i===current?' active':''); b.style.background=L.color;
+    b.innerHTML=`${i+1}. ${L.title}<span class="badge">أُجيب ${answered(i)} من 10 • الدرجة ${score(i)}</span>`;
+    b.onclick=()=>{current=i;render();window.scrollTo({top:0,behavior:'smooth'});};
+    t.appendChild(b);
+  });
+}
+
+function render(){
+  document.getElementById('result').style.display='none';
+  document.getElementById('quiz').style.display='block';
+  renderTabs();
+  const L=LESSONS[current], box=document.getElementById('quiz');
+  box.style.setProperty('--accent',L.color);
+  let h=`<div class="lesson-head" style="background:linear-gradient(135deg,${L.color},#222b)">
+    <h2>📘 ${L.title}</h2><small>${L.sub}</small>
+    <div class="progress"><span style="width:${answered(current)*10}%"></span></div></div>`;
+  L.qs.forEach((q,qi)=>{
+    const s=state[current][qi];
+    h+=`<div class="q"><h3><span class="num">${qi+1}</span>${q.q}${q.t?'<span class="tagq">من التقويم</span>':''}</h3><div class="opts">`;
+    s.opts.forEach((o,oi)=>{
+      let cls='opt';
+      if(s.chosen!==null){ if(o===q.a) cls+=' correct'; else if(o===s.chosen) cls+=' wrong'; }
+      h+=`<button class="${cls}" ${s.chosen!==null?'disabled':''} onclick="choose(${qi},${oi})">${'أبجد'[oi]}) ${o}</button>`;
+    });
+    h+=`</div>`;
+    if(s.chosen!==null){
+      const ok=s.chosen===q.a;
+      h+=`<div class="fb show ${ok?'ok':'no'}">${ok?'✅ أحسنت! إجابة صحيحة.':'❌ الإجابة الصحيحة: '+q.a+'.'}<br>💡 ${q.e}</div>`;
+    }
+    h+=`</div>`;
+  });
+  box.innerHTML=h;
+  document.getElementById('nextBtn').style.display = current<LESSONS.length-1?'inline-block':'none';
+}
+
+function choose(qi,oi){
+  const s=state[current][qi]; if(s.chosen!==null) return;
+  s.chosen=s.opts[oi]; 
+  const y=window.scrollY; render(); window.scrollTo(0,y);
+}
+
+document.getElementById('nextBtn').onclick=()=>{ if(current<LESSONS.length-1){current++;render();window.scrollTo({top:0,behavior:'smooth'});} };
+
+document.getElementById('finishBtn').onclick=()=>{
+  const total=LESSONS.reduce((s,_,i)=>s+score(i),0);
+  const ans=LESSONS.reduce((s,_,i)=>s+answered(i),0);
+  const pct=Math.round(total/40*100);
+  const name=document.getElementById('sname').value.trim()||'الطالب';
+  const stars=pct>=90?'⭐⭐⭐⭐⭐':pct>=75?'⭐⭐⭐⭐':pct>=60?'⭐⭐⭐':pct>=40?'⭐⭐':'⭐';
+  const msg=pct>=90?'ممتاز! بارك الله فيك 🌟':pct>=75?'جيد جدًا، استمر 👏':pct>=60?'جيد، راجع الأسئلة الخاطئة 📖':'تحتاج إلى مراجعة الدروس مرة أخرى 💪';
+  let rows=LESSONS.map((L,i)=>`<tr><td style="color:${L.color};font-weight:700">${L.title}</td><td>${score(i)} / 10</td></tr>`).join('');
+  const r=document.getElementById('result');
+  r.innerHTML=`<h2>🎉 نتيجة ${name}</h2><div class="stars">${stars}</div>
+    <div class="big">${total} / 40</div><p><b>${pct}%</b> • ${msg}</p>
+    ${ans<40?`<p style="color:#d62828">تنبيه: لم تُجب عن ${40-ans} سؤالًا.</p>`:''}
+    <table class="res-table"><tr><th>الدرس</th><th>الدرجة</th></tr>${rows}</table>
+    <div class="actions"><button class="btn alt" onclick="render()">↩ العودة للأسئلة</button>
+    <button class="btn main" onclick="resetAll()">🔄 إعادة الاختبار</button>
+    <button class="btn next" onclick="window.print()">🖨 طباعة النتيجة</button></div>`;
+  document.getElementById('quiz').style.display='none';
+  r.style.display='block'; renderTabs(); window.scrollTo({top:0,behavior:'smooth'});
+};
+
+function resetAll(){
+  state.forEach((ls,li)=>ls.forEach((s,qi)=>{s.chosen=null;s.opts=shuffle([LESSONS[li].qs[qi].a,...LESSONS[li].qs[qi].o]);}));
+  current=0; render(); window.scrollTo({top:0,behavior:'smooth'});
+}
+render();
+</script>
+</body>
+</html>
